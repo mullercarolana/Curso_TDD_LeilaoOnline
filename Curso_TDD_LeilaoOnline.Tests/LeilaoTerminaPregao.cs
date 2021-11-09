@@ -1,25 +1,66 @@
 using Curso_TDD_LeilaoOnline.Core;
+using System;
 using Xunit;
 
 namespace Curso_TDD_LeilaoOnline.Tests
 {
     public class LeilaoTerminaPregao
     {
+        [Theory]
+        [InlineData(1200, 1250, new double[] { 800, 1150, 1400, 1250 })]
+        public void RetornaValorSuperiorMaisProximoDadoLeilaoNessaModalidade(double valorDestinado, double valorEsperado, double[] ofertas)
+        {
+            //Arranje
+            var leilao = new Leilao("Cristaleira", valorDestinado);
+            var pessoaInteressada1 = new Interessada("Fabiana", leilao);
+            var pessoaInteressada2 = new Interessada("Geovana", leilao);
+
+            leilao.IniciaPregao();
+
+            for (int i = 0; i < ofertas.Length; i++)
+            {
+                var valor = ofertas[i];
+                if ((i % 2) == 0)
+                {
+                    leilao.RecebeLance(pessoaInteressada1, valor);
+                }
+                else
+                {
+                    leilao.RecebeLance(pessoaInteressada2, valor);
+                }
+            }
+
+            //Act
+            leilao.TerminaPregao();
+
+            //Assert
+            Assert.Equal(valorEsperado, leilao.Ganhador.Valor);
+        }
+
         [Theory] //Cria um teste para várias condições de entrada
         [InlineData(1000, new double[] { 800, 900, 1000, 980 })]
         [InlineData(1210, new double[] { 800, 900, 1200, 1210 })]
         [InlineData(800, new double[] { 800 })]
-        public void RetornaMaiorValorDadoLeilaoComPeloMenosUmLance(double valorEsperado, double[] valoresDeEntrada)
+        public void RetornaMaiorValorDadoLeilaoComPeloMenosUmLance(double valorEsperado, double[] ofertas)
         {
             //Arranje
             var leilao = new Leilao("Espelho");
             var pessoaInteressada1 = new Interessada("Marcelo", leilao);
+            var pessoaInteressada2 = new Interessada("Maria", leilao);
 
             leilao.IniciaPregao();
 
-            foreach (var valor in valoresDeEntrada)
+            for (int i = 0; i < ofertas.Length; i++)
             {
-                leilao.RecebeLance(pessoaInteressada1, valor);
+                var valor = ofertas[i];
+                if ((i % 2) == 0)
+                {
+                    leilao.RecebeLance(pessoaInteressada1, valor);
+                }
+                else
+                {
+                    leilao.RecebeLance(pessoaInteressada2, valor);
+                }
             }
 
             //Act
@@ -98,6 +139,21 @@ namespace Curso_TDD_LeilaoOnline.Tests
             var valorObtido = leilao.Ganhador.Valor;
 
             Assert.Equal(valorEsperado, valorObtido);
+        }
+
+        [Fact]
+        public void LancaInvadidOperationExceptionDadoPregaoNaoIniciado()
+        {
+            //Arrange
+            var leilao = new Leilao("Sofá Medieval");
+            
+            //Assert
+            var exceptionObtida = Assert.Throws<InvalidOperationException>(
+                //Act - será um delegate
+                () => leilao.TerminaPregao());
+
+            var mensagemEsperada = "Não é possível terminar o pregão sem que ele tenha começado. Utilize o método IniciarPregao().";
+            Assert.Equal(mensagemEsperada, exceptionObtida.Message);
         }
 
         [Fact]
