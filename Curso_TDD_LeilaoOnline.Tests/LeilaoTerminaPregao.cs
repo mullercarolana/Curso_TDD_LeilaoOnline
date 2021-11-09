@@ -11,7 +11,8 @@ namespace Curso_TDD_LeilaoOnline.Tests
         public void RetornaValorSuperiorMaisProximoDadoLeilaoNessaModalidade(double valorDestinado, double valorEsperado, double[] ofertas)
         {
             //Arranje
-            var leilao = new Leilao("Cristaleira", valorDestinado);
+            IModalidadeAvaliacao modalidade = new OfertaSuperiorMaisProxima(valorDestinado);
+            var leilao = new Leilao("Cristaleira", modalidade);
             var pessoaInteressada1 = new Interessada("Fabiana", leilao);
             var pessoaInteressada2 = new Interessada("Geovana", leilao);
 
@@ -44,7 +45,8 @@ namespace Curso_TDD_LeilaoOnline.Tests
         public void RetornaMaiorValorDadoLeilaoComPeloMenosUmLance(double valorEsperado, double[] ofertas)
         {
             //Arranje
-            var leilao = new Leilao("Espelho");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Espelho", modalidade);
             var pessoaInteressada1 = new Interessada("Marcelo", leilao);
             var pessoaInteressada2 = new Interessada("Maria", leilao);
 
@@ -75,7 +77,8 @@ namespace Curso_TDD_LeilaoOnline.Tests
         public void RetornaMaiorValorDadoLeilaoComLancesEmOrdemOrdenada()
         {
             //Arrange
-            var leilao = new Leilao("Televisão Vintage");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Televisão Vintage", modalidade);
             var pessoaInteressada1 = new Interessada("Ana Carolina", leilao);
             var pessoaInteressada2 = new Interessada("Maria", leilao);
 
@@ -99,7 +102,8 @@ namespace Curso_TDD_LeilaoOnline.Tests
         public void RetornaMaiorValorDadoLeilaoComLancesEmOrdemDesordenada()
         {
             //Arrange - cenário
-            var leilao = new Leilao("Sofá Medieval");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Sofá Medieval", modalidade);
             var pessoaInteressada1 = new Interessada("Ana Carolina", leilao);
             var pessoaInteressada2 = new Interessada("Maria", leilao);
 
@@ -124,7 +128,8 @@ namespace Curso_TDD_LeilaoOnline.Tests
         public void RetornaMaiorValorDadoLeilaoComApenasUmLance()
         {
             //Arrange
-            var leilao = new Leilao("Sofá Medieval");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Sofá Medieval", modalidade);
             var pessoaInteressada1 = new Interessada("Ana Carolina", leilao);
 
             leilao.IniciaPregao();
@@ -145,7 +150,8 @@ namespace Curso_TDD_LeilaoOnline.Tests
         public void LancaInvadidOperationExceptionDadoPregaoNaoIniciado()
         {
             //Arrange
-            var leilao = new Leilao("Sofá Medieval");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Sofá Medieval", modalidade);
             
             //Assert
             var exceptionObtida = Assert.Throws<InvalidOperationException>(
@@ -160,7 +166,8 @@ namespace Curso_TDD_LeilaoOnline.Tests
         public void RetornaZeroDadoLeilaoSemLances()
         {
             //Arrange
-            var leilao = new Leilao("Sofá Medieval");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Sofá Medieval", modalidade);
 
             leilao.IniciaPregao();
 

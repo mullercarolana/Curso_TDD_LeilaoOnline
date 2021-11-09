@@ -12,21 +12,22 @@ namespace Curso_TDD_LeilaoOnline.Core
     }
     public class Leilao
     {
-        public Leilao(string peca, double valorDestinado = 0)
+        public Leilao(string peca, IModalidadeAvaliacao modalidadeAvaliacaoLeilao)
         {
             Peca = peca;
-            ValorDestinado = valorDestinado;
+            _modalidadeAvaliacaoLeilao = modalidadeAvaliacaoLeilao;
             _lances = new List<Lance>();
             Estado = EstadoLeilao.LeilaoAntesDoPregao;
         }
 
+        private IModalidadeAvaliacao _modalidadeAvaliacaoLeilao;
         private Interessada _ultimoCliente;
         private IList<Lance> _lances;
+
         public IEnumerable<Lance> Lances => _lances;
         public string Peca { get; }
         public Lance Ganhador { get; private set; }
         public EstadoLeilao Estado { get; private set; }
-        public double ValorDestinado { get; }
 
         public void IniciaPregao()
         {
@@ -55,22 +56,7 @@ namespace Curso_TDD_LeilaoOnline.Core
                 throw new InvalidOperationException("Não é possível terminar o pregão sem que ele tenha começado. Utilize o método IniciarPregao().");
             }
 
-            if (ValorDestinado > 0)
-            {
-                Ganhador = Lances
-                    .DefaultIfEmpty(new Lance(null, 0))
-                    .Where(l => l.Valor > ValorDestinado)
-                    .OrderBy(l => l.Valor)
-                    .FirstOrDefault();
-            }
-            else
-            {
-                Ganhador = Lances
-                .DefaultIfEmpty(new Lance(null, 0))
-                .OrderBy(l => l.Valor)
-                .LastOrDefault();
-            }
-
+            Ganhador = _modalidadeAvaliacaoLeilao.Avalia(this);
             Estado = EstadoLeilao.LeilaoFinalizado;
         }
     }

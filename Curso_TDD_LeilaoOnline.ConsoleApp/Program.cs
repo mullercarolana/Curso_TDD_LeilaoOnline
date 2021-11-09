@@ -26,7 +26,8 @@ namespace Curso_TDD_LeilaoOnline.ConsoleApp
         private static void LeilaoComVariosLances()
         {
             //Arrange - cenário
-            var leilao = new Leilao("Sofá Medieval");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Sofá Medieval", modalidade);
             var pessoaInteressada1 = new Interessada("Ana Carolina", leilao);
             var pessoaInteressada2 = new Interessada("Maria", leilao);
 
@@ -48,7 +49,8 @@ namespace Curso_TDD_LeilaoOnline.ConsoleApp
         private static void LeilaoComApenasUmLance()
         {
             //Arrange
-            var leilao = new Leilao("Sofá Medieval");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Sofá Medieval", modalidade);
             var pessoaInteressada1 = new Interessada("Ana Carolina", leilao);
 
             leilao.RecebeLance(pessoaInteressada1, 800);

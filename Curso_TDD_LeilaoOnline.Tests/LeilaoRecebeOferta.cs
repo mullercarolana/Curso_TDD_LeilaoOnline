@@ -10,7 +10,8 @@ namespace Curso_TDD_LeilaoOnline.Tests
         public void NaoAceitaProximoLancheDadoMesmoClienteRealizouUltimoLance()
         {
             //Arrange
-            var leilao = new Leilao("Escudo Mediaval");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Escudo Mediaval", modalidade);
             var pessoaInteressada1 = new Interessada("Samuel", leilao);
             leilao.IniciaPregao();
             leilao.RecebeLance(pessoaInteressada1, 900);
@@ -30,7 +31,8 @@ namespace Curso_TDD_LeilaoOnline.Tests
         public void NaoPermiteNovosLancesDadoLeilaoFinalizado(int quantidadeEsperada, double[] ofertas)
         {
             //Arrange
-            var leilao = new Leilao("Armadura Medieval");
+            var modalidade = new MaiorValor();
+            var leilao = new Leilao("Armadura Medieval", modalidade);
             var pessoaInteressada1 = new Interessada("Lucas", leilao);
             var pessoaInteressada2 = new Interessada("Maria", leilao);
 
